@@ -114,44 +114,55 @@ function getRandomArrayElement(array) {
 
 //для генерации случайного числа с плавающей точки для координат
 
-const getRandomLocationLat = getRandomFractional(LOCATION.lat.min, LOCATION.lat.max, 5);
-const getRandomLocationLng = getRandomFractional(LOCATION.lng.min, LOCATION.lng.max, 5);
+//const randomLocationLat = getRandomFractional(LOCATION.lat.min, LOCATION.lat.max, 5);
+//const randomLocationLng = getRandomFractional(LOCATION.lng.min, LOCATION.lng.max, 5);
 
 // для генерации случайного номера аватарки
 
 function createNameAvatar() {
   const numberAvatar = getRandomInt(1, 10);
-  if (numberAvatar < 10) {
-    return `img/avatars/user${0}${numberAvatar}.png`;
-  }
-  else {
-    return `img/avatars/user${numberAvatar}.png`;
-  }
+  //return (numberAvatar < 10) ? `img/avatars/user${0}${numberAvatar}.png` : `img/avatars/user${numberAvatar}.png`;
+  return `img/avatars/user${numberAvatar < 10 ? '0' : ''}${numberAvatar}.png`;  //вариант выше я смогу воспроизвести потом, а этот наверное нет, поняла что так тоже можно.
 }
 
+//для перемешивания массива по алгоритму Фишера-Йетса
+
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const currentNumber = Math.floor(Math.random() * (i + 1));
+    const temp = arr[currentNumber];
+    arr[currentNumber] = arr[i];
+    arr[i] = temp;
+  }
+  return arr;
+}
 //для случайной длинны массива
 
 function createArrayFeatures() {
+  const shuffleFeatures = shuffleArray(FEATURES);
   const numberFeatures = getRandomInt(0, 5);
-  const resultFeatures = FEATURES.slice(numberFeatures);
+  const resultFeatures = shuffleFeatures.slice(numberFeatures);
   return resultFeatures;
 }
 
 function createArrayPhotos() {
+  const shufflePhotos = shuffleArray(PHOTOS);
   const numberPhotos = getRandomInt(0, 2);
-  const resultPhotos = PHOTOS.slice(numberPhotos);
+  const resultPhotos = shufflePhotos.slice(numberPhotos);
   return resultPhotos;
 }
 
 
 function createAdvert() {
+  const randomLocationLat = getRandomFractional(LOCATION.lat.min, LOCATION.lat.max, 5);
+  const randomLocationLng = getRandomFractional(LOCATION.lng.min, LOCATION.lng.max, 5);
   return {
     author: {
       avatar: createNameAvatar(),
     },
     offer: {
       title: getRandomArrayElement(TITLE),
-      address: `location.x ${getRandomLocationLat},location.y ${getRandomLocationLng}`,
+      address: `${randomLocationLat}, ${randomLocationLng}`,  /*/`${getRandomFractional(LOCATION.lat.min, LOCATION.lat.max, 5)}, ${getRandomFractional(LOCATION.lng.min, LOCATION.lng.max, 5)}`,*/
       price: getRandomInt(price.min, price.max),
       type: getRandomArrayElement(TYPE),
       rooms: getRandomInt(rooms.min, rooms.max),
@@ -163,8 +174,8 @@ function createAdvert() {
       photos: createArrayPhotos(),
     },
     location: {
-      lat: getRandomLocationLat,
-      lng: getRandomLocationLng,
+      lat: randomLocationLat,//getRandomFractional(LOCATION.lat.min, LOCATION.lat.max, 5),
+      lng: randomLocationLng,//getRandomFractional(LOCATION.lng.min, LOCATION.lng.max, 5),
 
     },
   };
